@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full antialiased">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>American Eagle Multi Services - Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#0f172a',
+                            navyLight: '#1e3a8a',
+                            red: '#dc2626',
+                            redHover: '#b91c1c',
+                            accent: '#3b82f6',
+                            tourist: '#d97706',
+                            darkGray: '#141414',
+                            darkCard: '#1f1f1f',
+                            darkBorder: '#2e2e2e'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .apple-glass-red { background: linear-gradient(135deg, rgba(254, 226, 226, 0.9), rgba(254, 202, 202, 0.7)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(239, 68, 68, 0.3); color: #991b1b; }
+        .apple-glass-blue { background: linear-gradient(135deg, rgba(219, 234, 254, 0.9), rgba(191, 219, 254, 0.7)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.3); color: #1e40af; }
+        .apple-glass-yellow { background: linear-gradient(135deg, rgba(254, 243, 199, 0.9), rgba(253, 230, 138, 0.7)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(234, 179, 8, 0.3); color: #854d0e; }
+        .apple-glass-pink { background: linear-gradient(135deg, rgba(252, 231, 243, 0.9), rgba(251, 207, 232, 0.7)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(236, 72, 153, 0.3); color: #9d174d; }
+        .apple-glass-indigo { background: linear-gradient(135deg, rgba(224, 231, 255, 0.9), rgba(199, 210, 254, 0.7)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(99, 102, 241, 0.3); color: #3730a3; }
+        .dark .apple-glass-red { background: rgba(127, 29, 29, 0.4); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
+        .dark .apple-glass-blue { background: rgba(30, 58, 138, 0.4); border-color: rgba(59, 130, 246, 0.4); color: #93c5fd; }
+        .dark .apple-glass-yellow { background: rgba(113, 63, 18, 0.4); border-color: rgba(234, 179, 8, 0.4); color: #fde047; }
+        .dark .apple-glass-pink { background: rgba(131, 24, 67, 0.4); border-color: rgba(236, 72, 153, 0.4); color: #fbcfe8; }
+        .dark .apple-glass-indigo { background: rgba(49, 46, 129, 0.4); border-color: rgba(99, 102, 241, 0.4); color: #c7d2fe; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] dark:bg-[#141414] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-brand-darkCard border-r border-slate-200 dark:border-brand-darkBorder flex flex-col transition-all duration-300 z-30 fixed lg:relative inset-y-0 left-0 -translate-x-full lg:translate-x-0">
+            <div class="h-16 flex items-center px-6 border-b border-slate-100 dark:border-brand-darkBorder gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-navy to-brand-red flex items-center justify-center text-white font-bold shadow-md shadow-brand-navy/20">
+                    <i class="fa-solid fa-feather text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm tracking-tight text-brand-navy dark:text-white leading-tight">American Eagle</h1>
+                    <span class="text-[10px] uppercase tracking-wider font-semibold text-brand-red">Multi Services</span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+                <div>
+                    <p class="px-3 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-2">Visão Geral</p>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all bg-brand-navy text-white shadow-md shadow-brand-navy/15">
+                            <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard Geral
+                        </button>
+                    </nav>
+                </div>
+
+                <div>
+                    <p class="px-3 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-2">Segmentos da Empresa</p>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('immigration')" id="nav-immigration" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder hover:text-brand-navy dark:hover:text-white">
+                            <i class="fa-solid fa-passport w-5 text-center text-brand-accent"></i> Imigração
+                        </button>
+                        <button onclick="switchTab('tourist')" id="nav-tourist" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder hover:text-brand-navy dark:hover:text-white">
+                            <i class="fa-solid fa-plane-departure w-5 text-center text-amber-600"></i> Turista & Renovação
+                        </button>
+                        <button onclick="switchTab('consular')" id="nav-consular" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder hover:text-brand-navy dark:hover:text-white">
+                            <i class="fa-solid fa-globe w-5 text-center text-brand-red"></i> Serviços Consulares
+                        </button>
+                    </nav>
+                </div>
+
+                <div>
+                    <p class="px-3 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-2">Operacional</p>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('receipts-tracker')" id="nav-receipts-tracker" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder hover:text-brand-navy dark:hover:text-white relative">
+                            <i class="fa-solid fa-barcode w-5 text-center text-emerald-500"></i> Receipt Number Status
+                            <span class="absolute right-2 bg-emerald-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">Diário</span>
+                        </button>
+                        <button onclick="switchTab('translations')" id="nav-translations" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder hover:text-brand-navy dark:hover:text-white">
+                            <i class="fa-solid fa-language w-5 text-center text-indigo-500"></i> Traduções (IA)
+                        </button>
+                        <button onclick="switchTab('clients')" id="nav-clients" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder hover:text-brand-navy dark:hover:text-white">
+                            <i class="fa-solid fa-users w-5 text-center"></i> Clientes & Casos
+                        </button>
+                        <button onclick="switchTab('financial')" id="nav-financial" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder hover:text-brand-navy dark:hover:text-white">
+                            <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Financeiro & Faturas
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-100 dark:border-brand-darkBorder">
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-brand-darkBorder">
+                    <i class="fa-solid fa-gear w-5 text-center"></i> Configurações
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <header class="h-16 bg-white dark:bg-brand-darkCard border-b border-slate-200 dark:border-brand-darkBorder flex items-center justify-between px-6 z-20">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden text-slate-500 dark:text-slate-300 hover:text-brand-navy text-lg p-2">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title" class="text-lg font-bold text-slate-800 dark:text-white">Dashboard Geral</h2>
+                        <p id="page-subtitle" class="text-xs text-slate-500 dark:text-slate-400">Visão consolidada de processos imigratórios e consulares</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="openModal()" class="hidden sm:flex items-center gap-2 bg-gradient-to-r from-brand-navy to-brand-navyLight hover:from-brand-navyLight hover:to-brand-navy text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-brand-navy/15 transition-all">
+                        <i class="fa-solid fa-plus text-brand-red"></i> Novo Processo
+                    </button>
+
+                    <button onclick="toggleDarkMode()" id="darkModeToggle" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-brand-darkBorder hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-400 flex items-center justify-center transition-all shadow-xs" title="Alternar Modo Escuro / Diurno">
+                        <i id="darkModeIcon" class="fa-solid fa-moon text-sm"></i>
+                    </button>
+
+                    <div class="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-brand-darkBorder">
+                        <div class="w-9 h-9 rounded-full bg-brand-red text-white font-bold flex items-center justify-center text-xs shadow">
+                            MP
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <span class="block text-xs font-bold text-slate-700 dark:text-slate-200">Malu Peres</span>
+                            <span class="block text-[10px] text-slate-400 dark:text-slate-500">Setor Administrativo</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-6 space-y-6">
+
+                <!-- TAB 1: DASHBOARD GERAL COM BANNER INSTITUCIONAL E BOTÕES DE RÁPIDO ACESSO -->
+                <div id="tab-dashboard" class="tab-content space-y-6">
+                    
+                    <!-- Banner Institucional Inovador -->
+                    <div class="bg-gradient-to-r from-brand-navy via-indigo-900 to-brand-red text-white p-8 rounded-3xl shadow-xl relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="absolute right-0 top-0 opacity-10 text-9xl translate-x-10 -translate-y-6 pointer-events-none">
+                            <i class="fa-solid fa-feather"></i>
+                        </div>
+                        <div class="relative z-10 space-y-2 max-w-xl">
+                            <span class="bg-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full inline-block backdrop-blur-md">Excelência & Comprometimento</span>
+                            <h2 class="text-3xl font-extrabold tracking-tight">Uma empresa de sucesso, American Eagle</h2>
+                            <p class="text-slate-200 text-xs sm:text-sm leading-relaxed">
+                                Gerencie petições imigratórias, vistos consulares e acompanhamento diário perante o governo dos EUA em uma única plataforma integrada.
+                            </p>
+                        </div>
+                        <div class="relative z-10 flex gap-3">
+                            <button onclick="openModal()" class="px-5 py-3 bg-white text-brand-navy font-bold text-xs rounded-2xl shadow-lg hover:bg-slate-100 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-plus text-brand-red"></i> Novo Processo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Seção de Rápido Acesso Categorizada por Setores -->
+                    <div class="space-y-4">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Atalhos de Rápido Acesso por Setores</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            
+                            <!-- Imigração -->
+                            <div class="bg-white dark:bg-brand-darkCard p-6 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-brand-accent flex items-center justify-center text-lg font-bold">
+                                        <i class="fa-solid fa-passport"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 dark:text-white text-sm">Rápido Acesso - Imigração</h4>
+                                        <p class="text-[11px] text-slate-500">Petições, RFEs e prazos USCIS</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 pt-2">
+                                    <button onclick="switchTab('immigration-kanban')" class="p-3 bg-slate-50 dark:bg-slate-800 hover:bg-brand-navy hover:text-white dark:hover:bg-blue-900 text-slate-700 dark:text-slate-200 rounded-2xl text-xs font-semibold transition-all flex flex-col items-center gap-1.5 text-center">
+                                        <i class="fa-solid fa-columns text-brand-accent text-sm"></i> Dashboard Colunas
+                                    </button>
+                                    <button onclick="switchTab('immigration-calendar')" class="p-3 bg-slate-50 dark:bg-slate-800 hover:bg-brand-navy hover:text-white dark:hover:bg-blue-900 text-slate-700 dark:text-slate-200 rounded-2xl text-xs font-semibold transition-all flex flex-col items-center gap-1.5 text-center">
+                                        <i class="fa-solid fa-calendar-days text-brand-red text-sm"></i> Calendário Prazos
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Vistos de Turista -->
+                            <div class="bg-white dark:bg-brand-darkCard p-6 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center text-lg font-bold">
+                                        <i class="fa-solid fa-plane-departure"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 dark:text-white text-sm">Rápido Acesso - Vistos de Turista</h4>
+                                        <p class="text-[11px] text-slate-500">Formulários DS-160 e entrevistas</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 gap-2 pt-2">
+                                    <button onclick="switchTab('tourist')" class="p-3 bg-slate-50 dark:bg-slate-800 hover:bg-amber-600 hover:text-white text-slate-700 dark:text-slate-200 rounded-2xl text-xs font-semibold transition-all flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-list-check text-amber-600 text-sm"></i> Acessar Kanban de Turista (11 Etapas)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Receipt Number Status -->
+                            <div class="bg-white dark:bg-brand-darkCard p-6 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm space-y-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center text-lg font-bold">
+                                        <i class="fa-solid fa-barcode"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 dark:text-white text-sm">Rápido Acesso - Receipts</h4>
+                                        <p class="text-[11px] text-slate-500">Acompanhamento diário USCIS</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 gap-2 pt-2">
+                                    <button onclick="switchTab('receipts-tracker')" class="p-3 bg-slate-50 dark:bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-700 dark:text-slate-200 rounded-2xl text-xs font-semibold transition-all flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-shield-halved text-emerald-500 text-sm"></i> Ver Receipt Number Status
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white dark:bg-brand-darkCard p-5 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 dark:bg-blue-950/20 rounded-bl-full -z-0"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-brand-accent flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-folder-open"></i>
+                                    </div>
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-arrow-up"></i> +12%
+                                    </span>
+                                </div>
+                                <h3 id="statTotalCases" class="text-2xl font-bold text-slate-800 dark:text-white">142</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Casos Ativos Totais</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-brand-darkCard p-5 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-amber-50 dark:bg-amber-950/20 rounded-bl-full -z-0"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-plane-departure"></i>
+                                    </div>
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-bolt"></i> DS-160
+                                    </span>
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-800 dark:text-white">45</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Vistos de Turista Ativos</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-brand-darkCard p-5 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 dark:bg-emerald-950/20 rounded-bl-full -z-0"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-award"></i>
+                                    </div>
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-arrow-up"></i> +24%
+                                    </span>
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-800 dark:text-white">64</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Aprovados (Mês)</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-brand-darkCard p-5 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-purple-50 dark:bg-purple-950/20 rounded-bl-full -z-0"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/40 text-purple-600 flex items-center justify-center text-lg">
+                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                    </div>
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-check"></i> Pago
+                                    </span>
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-800 dark:text-white">$38.450</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Faturamento do Mês</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white dark:bg-brand-darkCard p-6 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm flex flex-col">
+                            <div class="flex justify-between items-center mb-6">
+                                <div>
+                                    <h3 class="font-bold text-slate-800 dark:text-white">Processos Concluídos vs. Novos</h3>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Evolução mensal dos últimos 6 meses</p>
+                                </div>
+                            </div>
+                            <div class="flex-1 relative min-h-[280px]">
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-brand-darkCard p-6 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm flex flex-col">
+                            <div class="mb-4">
+                                <h3 class="font-bold text-slate-800 dark:text-white">Distribuição por Segmento</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Imigração, Turista e Consulares</p>
+                            </div>
+                            <div class="flex-1 relative flex items-center justify-center min-h-[220px]">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: TRADUÇÕES (INTELIGÊNCIA ARTIFICIAL CERTIFICADA) -->
+                <div id="tab-translations" class="tab-content space-y-6 hidden">
+                    <div class="bg-white dark:bg-brand-darkCard p-8 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm space-y-6 max-w-4xl mx-auto">
+                        <div class="flex justify-between items-start border-b border-slate-100 dark:border-brand-darkBorder pb-4">
+                            <div>
+                                <span class="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">USCIS Certified Translation</span>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-2">Módulo de Tradução Inteligente & Certificação</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Traduza certidões, diplomas e documentos enviados pelos clientes com formatação e certificação oficial pronta para assinatura digital.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">1. Quem está traduzindo (Tradutor Certificado)?</label>
+                                    <select id="translatorUserSelect" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs outline-none text-slate-800 dark:text-white">
+                                        <option value="Malu Peres">Malu Peres (Admin / Tradutora Certificada)</option>
+                                        <option value="Miqueias Oliveira">Miqueias Oliveira (Especialista Imigração)</option>
+                                        <option value="Equipe AEMS">American Eagle Multi Services (Institucional)</option>
+                                    </select>
+                                    <p class="text-[10px] text-slate-400 mt-1">O nome selecionado constará na declaração juramentada de competência exigida pelo USCIS.</p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">2. Direção da Tradução</label>
+                                    <select id="translationDirection" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs outline-none text-slate-800 dark:text-white">
+                                        <option value="pt-en">Português ➔ Inglês (Padrão USCIS)</option>
+                                        <option value="en-pt">Inglês ➔ Português</option>
+                                        <option value="es-en">Espanhol ➔ Inglês</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">3. Cole o Texto Original do Documento ou Descrição</label>
+                                    <textarea id="sourceDocumentText" rows="6" placeholder="Cole aqui o texto da certidão de nascimento, casamento, histórico escolar ou outro documento enviado pelo cliente..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs outline-none text-slate-800 dark:text-white resize-none"></textarea>
+                                </div>
+
+                                <button onclick="runAITranslation()" class="w-full py-3 bg-brand-navy dark:bg-indigo-600 hover:bg-brand-navyLight text-white rounded-xl text-xs font-semibold shadow-md transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Traduzir com IA e Gerar Certificação USCIS
+                                </button>
+                            </div>
+
+                            <div class="space-y-4 flex flex-col">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">4. Documento Traduzido & Certificação Oficial</label>
+                                <div id="translationOutputBox" class="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-xs font-mono overflow-y-auto min-h-[300px] text-slate-700 dark:text-slate-300 whitespace-pre-line">
+                                    Aguardando texto original e comando de tradução...
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="copyTranslation()" class="flex-1 py-2.5 bg-slate-200 dark:bg-brand-darkBorder hover:bg-slate-300 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold transition-all">
+                                        <i class="fa-solid fa-copy mr-1"></i> Copiar Texto
+                                    </button>
+                                    <button onclick="sendToAdobeSign()" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-semibold transition-all shadow-sm">
+                                        <i class="fa-solid fa-signature mr-1"></i> Enviar para Adobe Sign
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: IMIGRAÇÃO (COM SEÇÃO TIPOS DE CASOS) -->
+                <div id="tab-immigration" class="tab-content space-y-6 hidden">
+                    <div class="bg-gradient-to-r from-brand-navy to-brand-navyLight text-white p-8 rounded-3xl shadow-lg relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-10 text-9xl translate-x-6 -translate-y-6">
+                            <i class="fa-solid fa-passport"></i>
+                        </div>
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="bg-brand-red text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 inline-block">Segmento Especializado</span>
+                            <h2 class="text-2xl font-bold mb-2">Serviços de Imigração Americana</h2>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                Gerencie petições familiares, vistos de trabalho, Green Cards e naturalização com controle total por categoria e prazos perante o USCIS.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Seção Tipos de Casos -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-white px-1">Tipos de Casos</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                            <button onclick="openCaseTypeSubDashboard('Estudante')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-graduation-cap text-brand-accent text-lg group-hover:scale-110 transition-transform"></i> Estudante
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('Extensao')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-clock-rotate-left text-amber-500 text-lg group-hover:scale-110 transition-transform"></i> Extensão
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('Family Petition')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-people-roof text-rose-500 text-lg group-hover:scale-110 transition-transform"></i> Family Petition
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('Cidadania')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-flag-usa text-emerald-500 text-lg group-hover:scale-110 transition-transform"></i> Cidadania
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('EB-1')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-award text-pink-500 text-lg group-hover:scale-110 transition-transform"></i> EB-1
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('EB-2')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-briefcase text-purple-500 text-lg group-hover:scale-110 transition-transform"></i> EB-2
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('EB-3')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-id-badge text-blue-400 text-lg group-hover:scale-110 transition-transform"></i> EB-3
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('EB2NIW')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-lightbulb text-amber-400 text-lg group-hover:scale-110 transition-transform"></i> EB2NIW
+                            </button>
+                            <button onclick="openCaseTypeSubDashboard('Asylum')" class="p-4 bg-white dark:bg-brand-darkCard hover:bg-brand-navy hover:text-white dark:hover:bg-blue-950 border border-slate-200 dark:border-brand-darkBorder rounded-2xl text-xs font-bold transition-all shadow-xs flex flex-col items-center gap-2 text-center group">
+                                <i class="fa-solid fa-shield-heart text-red-500 text-lg group-hover:scale-110 transition-transform"></i> Asylum
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                        <button onclick="switchTab('immigration-kanban')" class="bg-gradient-to-r from-brand-red to-rose-700 hover:from-rose-700 hover:to-brand-red text-white p-5 rounded-2xl shadow-md flex items-center justify-between transition-all group">
+                            <div class="flex items-center gap-4 text-left">
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl text-rose-100 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-columns"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm">Dashboard Geral em Colunas</h4>
+                                    <p class="text-xs text-rose-100 mt-0.5">Visualize todos os casos divididos por status operacional</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-right text-white/70 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+
+                        <button onclick="switchTab('immigration-calendar')" class="bg-gradient-to-r from-brand-navy to-blue-900 hover:from-brand-navyLight hover:to-brand-navy text-white p-5 rounded-2xl shadow-md flex items-center justify-between transition-all group">
+                            <div class="flex items-center gap-4 text-left">
+                                <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl text-blue-200 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm">Visualizar por Calendário de Prazos</h4>
+                                    <p class="text-xs text-blue-200 mt-0.5">Acompanhe datas limite de envio e vencimentos de RFE</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-right text-white/70 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SUB-PAGE: SUB-DASHBOARD DE CADA TIPO DE CASO ESPECÍFICO -->
+                <div id="tab-casetype-subdashboard" class="tab-content space-y-6 hidden">
+                    <div class="flex items-center justify-between">
+                        <button onclick="switchTab('immigration')" class="px-4 py-2 bg-slate-200 dark:bg-brand-darkBorder hover:bg-slate-300 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar para Imigração
+                        </button>
+                        <span id="caseTypeBadgeTitle" class="apple-glass-blue px-3 py-1 rounded-full text-xs font-bold">Categoria Selecionada</span>
+                    </div>
+
+                    <!-- Gráfico e Estatísticas da Categoria -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white dark:bg-brand-darkCard p-6 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm flex flex-col justify-between">
+                            <h3 id="caseTypeChartTitle" class="font-bold text-slate-900 dark:text-white text-sm mb-4">Status dos Casos da Categoria</h3>
+                            <div class="h-48 relative">
+                                <canvas id="caseTypeStatusChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-brand-darkCard p-6 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm flex flex-col justify-between space-y-4">
+                            <h3 class="font-bold text-slate-900 dark:text-white text-sm">Resumo da Categoria</h3>
+                            <div class="grid grid-cols-3 gap-3 text-center">
+                                <div class="bg-blue-50 dark:bg-blue-950/40 p-3 rounded-2xl">
+                                    <span class="text-[10px] text-slate-400 block font-semibold uppercase">Em Andamento</span>
+                                    <p id="statCaseTypeOngoing" class="text-lg font-bold text-brand-accent">12</p>
+                                </div>
+                                <div class="bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-2xl">
+                                    <span class="text-[10px] text-slate-400 block font-semibold uppercase">Concluídos</span>
+                                    <p id="statCaseTypeCompleted" class="text-lg font-bold text-emerald-600">8</p>
+                                </div>
+                                <div class="bg-amber-50 dark:bg-amber-950/40 p-3 rounded-2xl">
+                                    <span class="text-[10px] text-slate-400 block font-semibold uppercase">Para Protocolar</span>
+                                    <p id="statCaseTypeProtocol" class="text-lg font-bold text-amber-600">4</p>
+                                </div>
+                            </div>
+                            <button onclick="openModal()" class="w-full py-2.5 bg-brand-navy text-white text-xs font-semibold rounded-xl hover:bg-brand-navyLight shadow-sm">
+                                <i class="fa-solid fa-plus mr-1"></i> Adicionar Caso nesta Categoria
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard em Colunas (Kanban Específico da Categoria) -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">Etapas Operacionais da Categoria</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
+                            <div class="bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-600 dark:text-slate-400">1. Coleta Inicial</h4>
+                                <div onclick="openCaseDetail('rfe_mariana')" class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs cursor-pointer hover:border-brand-navy space-y-1">
+                                    <span class="apple-glass-blue px-2 py-0.5 rounded text-[9px] font-bold">Documentos OK</span>
+                                    <h5 class="font-bold text-slate-900 dark:text-white text-xs">Mariana Silva</h5>
+                                    <p class="text-[10px] text-slate-500">Aguardando envio final.</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-blue-600">2. Em Elaboração</h4>
+                                <div class="text-xs text-slate-400 text-center py-6">Nenhum caso</div>
+                            </div>
+                            <div class="bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-amber-600">3. Para Protocolar</h4>
+                                <div class="text-xs text-slate-400 text-center py-6">Nenhum caso</div>
+                            </div>
+                            <div class="bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-emerald-600">4. Casos Concluídos</h4>
+                                <div class="text-xs text-slate-400 text-center py-6">Nenhum caso</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: VISTOS DE TURISTA & RENOVAÇÃO (11 ETAPAS KANBAN) -->
+                <div id="tab-tourist" class="tab-content space-y-6 hidden">
+                    <div class="bg-gradient-to-r from-amber-600 to-amber-800 text-white p-8 rounded-3xl shadow-lg relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-10 text-9xl translate-x-6 -translate-y-6">
+                            <i class="fa-solid fa-plane-departure"></i>
+                        </div>
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="bg-white text-amber-900 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 inline-block">Segmento de Vistos & Turismo</span>
+                            <h2 class="text-2xl font-bold mb-2">Vistos de Turista (B1/B2) & Renovação</h2>
+                            <p class="text-amber-100 text-sm leading-relaxed">
+                                Acompanhamento completo em tempo real das 11 etapas do processo de visto de turista, desde a identificação inicial até a conclusão.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">Fluxo Operacional de Turista (11 Etapas)</h3>
+                        <button onclick="openModal()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm">
+                            <i class="fa-solid fa-plus mr-1"></i> Novo Processo de Turista
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto pb-4">
+                        <div class="flex gap-4 min-w-[3800px] items-start">
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">1. Identificação do Cliente</h4>
+                                <div onclick="openCaseDetail('tourist_misael')" class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs cursor-pointer hover:border-amber-500 transition-all space-y-1">
+                                    <span class="apple-glass-yellow px-2 py-0.5 rounded text-[9px] font-bold">Turista B1/B2</span>
+                                    <h5 class="font-bold text-slate-900 dark:text-white text-xs">Misael Oliveira Santos</h5>
+                                    <p class="text-[10px] text-slate-500">Formulário respondido e anexos salvos.</p>
+                                </div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">2. Preenchimento do Formulário</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">3. Preenchimento da DS</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">4. Conferência interna da DS</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">5. Ajustar DS</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">6. Geração de Taxas</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">7. Aguardando pagamento das taxas</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">8. Agendamento da Entrevista</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">9. Orientação para entrevista</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-slate-700 dark:text-slate-300">10. Entrevista Consular</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                            <div class="w-72 bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-3">
+                                <h4 class="font-bold text-xs uppercase text-emerald-600">11. Processo concluído</h4>
+                                <div class="text-xs text-slate-400 text-center py-8">Nenhum caso nesta etapa</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-PAGE 2.1: CALENDÁRIO DE PRAZOS -->
+                <div id="tab-immigration-calendar" class="tab-content space-y-6 hidden">
+                    <div class="flex items-center justify-start">
+                        <button onclick="switchTab('immigration')" class="px-4 py-2 bg-slate-200 dark:bg-brand-darkBorder hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar para Imigração
+                        </button>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-2">Calendário de Prazos do USCIS</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Navegue pelos meses utilizando as setas e clique nos dias com prazos ou RFEs para abrir o dossiê completo.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-indigo-900 via-brand-navy to-slate-900 p-8 rounded-3xl text-white shadow-xl">
+                        <div class="flex justify-between items-center mb-6 border-b border-indigo-800 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-brand-red flex items-center justify-center text-white font-bold text-lg">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                </div>
+                                <div>
+                                    <h3 id="calendarMonthTitle" class="text-lg font-bold">Outubro 2026</h3>
+                                    <p class="text-xs text-indigo-200">Cronograma completo de vencimentos e prazos perante o governo</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex gap-2 hidden sm:flex">
+                                    <span class="bg-brand-red text-white text-[10px] px-2.5 py-1 rounded-lg font-semibold">● RFE Urgente</span>
+                                    <span class="bg-blue-600 text-white text-[10px] px-2.5 py-1 rounded-lg font-semibold">● Protocolo / Envio</span>
+                                </div>
+                                <div class="flex items-center gap-1 bg-white/10 p-1 rounded-xl">
+                                    <button onclick="changeMonth(-1)" class="w-8 h-8 rounded-lg hover:bg-white/20 flex items-center justify-center transition-all text-sm"><i class="fa-solid fa-chevron-left"></i></button>
+                                    <button onclick="changeMonth(1)" class="w-8 h-8 rounded-lg hover:bg-white/20 flex items-center justify-center transition-all text-sm"><i class="fa-solid fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-7 gap-2 text-center text-xs">
+                            <div class="font-bold text-indigo-300 py-2">Dom</div>
+                            <div class="font-bold text-indigo-300 py-2">Seg</div>
+                            <div class="font-bold text-indigo-300 py-2">Ter</div>
+                            <div class="font-bold text-indigo-300 py-2">Qua</div>
+                            <div class="font-bold text-indigo-300 py-2">Qui</div>
+                            <div class="font-bold text-indigo-300 py-2">Sex</div>
+                            <div class="font-bold text-indigo-300 py-2">Sáb</div>
+                        </div>
+
+                        <div id="calendarDaysGrid" class="grid grid-cols-7 gap-2 text-center text-xs mt-2"></div>
+                    </div>
+                </div>
+
+                <!-- SUB-PAGE 2.2: KANBAN DE IMIGRAÇÃO -->
+                <div id="tab-immigration-kanban" class="tab-content space-y-6 hidden">
+                    <div class="flex items-center justify-start">
+                        <button onclick="switchTab('immigration')" class="px-4 py-2 bg-slate-200 dark:bg-brand-darkBorder hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar para Imigração
+                        </button>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mt-2">Dashboard em Colunas (Etapas dos Casos)</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Acompanhamento visual com categorias categorizadas por etiquetas Apple Glass em tons pastel.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+                        <div class="bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-4">
+                            <div class="flex justify-between items-center px-1">
+                                <h3 class="font-bold text-xs uppercase tracking-wider text-slate-600 dark:text-slate-400">1. Doc. Inicial</h3>
+                                <span class="bg-slate-200 dark:bg-brand-darkBorder text-slate-700 dark:text-slate-300 font-bold text-[10px] px-2.5 py-0.5 rounded-full">1</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div onclick="openCaseDetail('doc_roberto')" class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-2 cursor-pointer hover:border-brand-navy transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <span class="apple-glass-blue px-2.5 py-1 rounded-full text-[10px] font-bold">I-539 | Estudante</span>
+                                        <span class="text-[10px] text-slate-400">Há 2 dias</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-xs">Roberto da Costa</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Coletando I-20 e comprovantes financeiros.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-4">
+                            <div class="flex justify-between items-center px-1">
+                                <h3 class="font-bold text-xs uppercase tracking-wider text-brand-navy dark:text-blue-400">2. Em Elaboração</h3>
+                                <span class="bg-blue-100 dark:bg-blue-950/40 text-brand-navy dark:text-blue-300 font-bold text-[10px] px-2.5 py-0.5 rounded-full">1</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div onclick="openCaseDetail('eb1_joao')" class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-2 cursor-pointer hover:border-brand-navy transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <span class="apple-glass-pink px-2.5 py-1 rounded-full text-[10px] font-bold">EB-1 |</span>
+                                        <span class="text-[10px] text-slate-400">Prazo: 22d</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-xs">João Roberto Lima</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Montando dossiê de premiações e cartas.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-red-50/70 dark:bg-red-950/20 p-4 rounded-3xl border border-red-200 dark:border-red-900/50 space-y-4">
+                            <div class="flex justify-between items-center px-1">
+                                <h3 class="font-bold text-xs uppercase tracking-wider text-brand-red">⚠️ 3. RFEs Pendentes</h3>
+                                <span class="bg-red-200 dark:bg-red-900 text-red-800 dark:text-red-200 font-bold text-[10px] px-2.5 py-0.5 rounded-full">1</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div onclick="openCaseDetail('rfe_mariana')" class="bg-white dark:bg-slate-800 p-4 rounded-2xl border-2 border-red-400 shadow-sm space-y-2 cursor-pointer hover:shadow-md transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <span class="apple-glass-red px-2.5 py-1 rounded-full text-[10px] font-bold">RFE | Response</span>
+                                        <span class="text-[10px] font-bold text-brand-red">Faltam 8 dias</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-xs">Mariana Silva</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Adicionando provas financeiras.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 dark:bg-brand-darkCard p-4 rounded-3xl border border-slate-200 dark:border-brand-darkBorder space-y-4">
+                            <div class="flex justify-between items-center px-1">
+                                <h3 class="font-bold text-xs uppercase tracking-wider text-emerald-700 dark:text-emerald-400">4. Protocolados USCIS</h3>
+                                <span class="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold text-[10px] px-2.5 py-0.5 rounded-full">1</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div onclick="openCaseDetail('protocolo_carlos')" class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-2 cursor-pointer hover:border-brand-navy transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <span class="apple-glass-yellow px-2.5 py-1 rounded-full text-[10px] font-bold">I-539 | Extensão</span>
+                                        <span class="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">SRC-26-901-88102</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-xs">Carlos Almeida</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Status USCIS: Case Was Received</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: CLIENTES & CASOS -->
+                <div id="tab-clients" class="tab-content space-y-6 hidden">
+                    <div class="bg-white dark:bg-brand-darkCard p-6 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-slate-800 dark:text-white text-base">Base de Clientes & Casos Cadastrados</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Lista completa de processos</p>
+                            </div>
+                            <button onclick="openModal()" class="bg-brand-navy text-white text-xs font-semibold px-4 py-2.5 rounded-xl">
+                                <i class="fa-solid fa-plus mr-1"></i> Cadastrar Novo
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-100 dark:border-brand-darkBorder">
+                                        <th class="py-3 px-6">Cliente (Titular)</th>
+                                        <th class="py-3 px-6">Segmento</th>
+                                        <th class="py-3 px-6">Categoria Específica</th>
+                                        <th class="py-3 px-6">Identificador / Recibo</th>
+                                        <th class="py-3 px-6 text-right">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientsTableBody" class="divide-y divide-slate-100 dark:divide-brand-darkBorder"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: STATUS DOS RECEIPTS (DIDÁTICO & ATUALIZAÇÃO DIÁRIA) -->
+                <div id="tab-receipts-tracker" class="tab-content space-y-6 hidden">
+                    <div class="bg-gradient-to-r from-emerald-800 to-teal-900 text-white p-8 rounded-3xl shadow-lg relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-10 text-9xl translate-x-6 -translate-y-6">
+                            <i class="fa-solid fa-barcode"></i>
+                        </div>
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="bg-white text-emerald-900 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3 inline-block">Monitoramento Diário de Status (USCIS)</span>
+                            <h2 class="text-2xl font-bold mb-2">Receipt Number Status</h2>
+                            <p class="text-emerald-100 text-sm leading-relaxed">
+                                Acompanhamento diário e automático de todos os recibos protocolados, baseado no <a href="https://www.uscis.gov/glossary-term/66907" target="_blank" class="underline font-semibold hover:text-white">glossário oficial do USCIS</a>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white dark:bg-brand-darkCard p-6 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="apple-glass-yellow px-2.5 py-1 rounded-full text-[10px] font-bold">I-539 | Extensão</span>
+                                <span class="text-xs font-mono font-bold text-emerald-600">SRC-26-901-88102</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-base">Carlos Almeida</h4>
+                            <div class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-1">
+                                <span class="text-[10px] text-slate-400 font-semibold uppercase">Status Governamental Atual</span>
+                                <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400">Case Was Received</p>
+                                <p class="text-[11px] text-slate-500">Última checagem automática hoje às 08:00 AM. Sem alterações pendentes.</p>
+                            </div>
+                            <button onclick="openCaseDetail('protocolo_carlos')" class="w-full py-2 bg-slate-100 dark:bg-brand-darkBorder hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold">Ver Dossiê Completo</button>
+                        </div>
+
+                        <div class="bg-white dark:bg-brand-darkCard p-6 rounded-3xl border border-slate-200 dark:border-brand-darkBorder shadow-sm space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="apple-glass-red px-2.5 py-1 rounded-full text-[10px] font-bold">RFE | Response</span>
+                                <span class="text-xs font-mono font-bold text-brand-red">IOE-938-28190</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-base">Mariana Silva</h4>
+                            <div class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-1">
+                                <span class="text-[10px] text-slate-400 font-semibold uppercase">Status Governamental Atual</span>
+                                <p class="text-xs font-bold text-brand-red">Notice Was Mailed (RFE)</p>
+                                <p class="text-[11px] text-slate-500">Última checagem automática hoje às 08:00 AM. Exigência ativa pendente de resposta.</p>
+                            </div>
+                            <button onclick="openCaseDetail('rfe_mariana')" class="w-full py-2 bg-slate-100 dark:bg-brand-darkBorder hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold">Ver Dossiê Completo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 6: CONSULAR -->
+                <div id="tab-consular" class="tab-content space-y-6 hidden">
+                    <div class="bg-gradient-to-r from-brand-red to-rose-700 text-white p-8 rounded-3xl shadow-lg">
+                        <h2 class="text-2xl font-bold mb-2">Serviços Consulares & Documentação</h2>
+                        <p class="text-slate-100 text-sm">Passaportes, procurações e atos consulares gerais.</p>
+                    </div>
+                </div>
+
+                <!-- TAB 7: FINANCIAL -->
+                <div id="tab-financial" class="tab-content space-y-6 hidden">
+                    <div class="bg-white dark:bg-brand-darkCard p-6 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm">
+                        <h3 class="font-bold text-slate-800 dark:text-white mb-4">Controle Financeiro & Faturas</h3>
+                    </div>
+                </div>
+
+                <!-- TAB 8: SETTINGS -->
+                <div id="tab-settings" class="tab-content space-y-6 hidden">
+                    <div class="bg-white dark:bg-brand-darkCard p-6 rounded-2xl border border-slate-200 dark:border-brand-darkBorder shadow-sm max-w-xl">
+                        <h3 class="font-bold text-slate-800 dark:text-white mb-4">Configurações da Plataforma</h3>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALHES DO CASO (70% DA TELA) -->
+    <div id="caseDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white dark:bg-brand-darkCard w-[70vw] rounded-3xl shadow-2xl border border-slate-100 dark:border-brand-darkBorder overflow-hidden flex flex-col max-h-[90vh]">
+            <div id="modalHeaderBg" class="bg-gradient-to-r from-brand-navy to-brand-navyLight p-6 text-white flex justify-between items-start relative">
+                <div class="space-y-1.5">
+                    <div id="modalCategoryBadgeContainer">
+                        <span id="modalCategoryBadge" class="apple-glass-red px-3 py-1 rounded-full text-xs font-bold inline-block">RFE | Response</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <h3 id="modalClientName" class="text-2xl font-bold">Nome do Cliente</h3>
+                        <button onclick="editField('category')" class="text-white/70 hover:text-white p-1" title="Alterar Categoria"><i class="fa-solid fa-pencil text-xs"></i></button>
+                    </div>
+                    <div id="editCategoryBox" class="hidden mt-2 space-y-2">
+                        <select id="inputEditCategory" class="w-full bg-slate-900 text-white border border-slate-700 rounded-xl p-2 text-xs outline-none">
+                            <option value="RFE | Response">RFE | Response</option>
+                            <option value="I-539 | Estudante">I-539 | Estudante</option>
+                            <option value="I-539 | Extensão">I-539 | Extensão</option>
+                            <option value="Family Petition">Family Petition</option>
+                            <option value="EB-1 |">EB-1 |</option>
+                            <option value="Turista & Renovação">Turista & Renovação</option>
+                        </select>
+                        <div class="flex gap-2 justify-end">
+                            <button onclick="saveField('category')" class="px-3 py-1 bg-white text-brand-navy rounded-lg text-[10px] font-bold">Salvar</button>
+                        </div>
+                    </div>
+                    <p id="modalCaseType" class="text-xs text-indigo-200 mt-0.5">Imigração</p>
+                </div>
+                <button onclick="closeCaseDetail()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 flex items-center justify-center text-white transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Abas do Dossiê -->
+            <div class="flex border-b border-slate-200 dark:border-brand-darkBorder bg-slate-50 dark:bg-slate-900 px-6 gap-2 pt-2">
+                <button onclick="switchCaseTab('general')" id="caseTab-general" class="case-tab-btn px-5 py-2.5 text-xs font-bold border-b-2 border-brand-navy text-brand-navy dark:text-white dark:border-blue-400 transition-all">
+                    <i class="fa-solid fa-info-circle mr-1.5"></i> Informações Gerais
+                </button>
+                <button onclick="switchCaseTab('questionnaire')" id="caseTab-questionnaire" class="case-tab-btn px-5 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-clipboard-question mr-1.5"></i> Respostas do Questionário
+                </button>
+                <button onclick="switchCaseTab('emails')" id="caseTab-emails" class="case-tab-btn px-5 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-envelope mr-1.5"></i> E-mails Automatizados
+                </button>
+                <button onclick="switchCaseTab('documents')" id="caseTab-documents" class="case-tab-btn px-5 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-folder-open mr-1.5"></i> Documentos
+                </button>
+                <button onclick="switchCaseTab('todo')" id="caseTab-todo" class="case-tab-btn px-5 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-list-check mr-1.5"></i> To-Do List
+                </button>
+                <button onclick="switchCaseTab('comments')" id="caseTab-comments" class="case-tab-btn px-5 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-comments mr-1.5"></i> Comentários da Equipe
+                </button>
+            </div>
+
+            <div class="p-8 overflow-y-auto space-y-6 flex-1 text-xs text-slate-800 dark:text-slate-200">
+                <!-- Informações Gerais (Diferente para Turista vs Imigração) -->
+                <div id="caseSection-general" class="case-section space-y-6">
+                    <div id="generalFieldsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                    
+                    <!-- Aba expansível no card geral para turistas -->
+                    <div id="touristQuickSummaryBox" class="hidden bg-amber-50 dark:bg-amber-950/20 p-5 rounded-2xl border border-amber-200 dark:border-amber-900/40 space-y-3">
+                        <h4 class="font-bold text-amber-900 dark:text-amber-400 text-xs uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-id-card"></i> Dados para Conferência Inicial (Turista)
+                        </h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-amber-100 dark:border-slate-800">
+                            <div>
+                                <span class="text-slate-400 block text-[10px] uppercase">Passaporte</span>
+                                <p id="qsPassport" class="font-mono font-bold text-slate-800 dark:text-white">GE999137</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px] uppercase">Código de Recuperação</span>
+                                <p id="qsRecoveryCode" class="font-mono font-bold text-amber-700 dark:text-amber-400">DS881920</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px] uppercase">Ano de Nascimento</span>
+                                <p id="qsBirthYear" class="font-bold text-slate-800 dark:text-white">1956</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px] uppercase">Nome da Mãe</span>
+                                <p id="qsMotherName" class="font-bold text-slate-800 dark:text-white">EULINA OLIVEIRA SANTOS</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Briefing do Caso de Imigração e Comentários Recentes com Linha Pontilhada -->
+                    <div id="immigrationBriefingAndComments" class="space-y-6 hidden">
+                        <div class="border-t border-dashed border-slate-300 dark:border-slate-700 pt-6"></div>
+                        <h4 class="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-address-card text-brand-accent"></i> Briefing do Caso (Imigração)
+                        </h4>
+                        <div id="immigrationBriefingContent" class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700"></div>
+
+                        <div class="border-t border-dashed border-slate-300 dark:border-slate-700 pt-6"></div>
+                        <h4 class="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-brand-accent"></i> Últimos Comentários da Equipe Registrados
+                        </h4>
+                        <div id="immigrationLatestComments" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <!-- Respostas Completas do Questionário (Exclusivo Turista Misael) -->
+                <div id="caseSection-questionnaire" class="case-section space-y-4 hidden">
+                    <h4 class="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-clipboard-question text-amber-600"></i> Questionário Completo Preenchido pelo Cliente
+                    </h4>
+                    <div id="fullQuestionnaireContent" class="space-y-6 text-xs"></div>
+                </div>
+
+                <!-- E-mails Automatizados -->
+                <div id="caseSection-emails" class="case-section space-y-4 hidden">
+                    <h4 class="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-envelope text-brand-accent"></i> Histórico de E-mails Automatizados Enviados
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <div class="flex justify-between items-center text-[11px] text-slate-400">
+                                <span class="font-bold text-brand-navy dark:text-blue-400">E-mail #1: Confirmação de Recebimento de Formulário</span>
+                                <span>Enviado automaticamente hoje às 09:15</span>
+                            </div>
+                            <p class="text-xs text-slate-700 dark:text-slate-300">Olá Misael, recebemos com sucesso os seus dados e documentos para o Visto B1/B2. Nossa equipe já iniciou a conferência.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="caseSection-documents" class="case-section space-y-4 hidden">
+                    <h4 class="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-folder-open text-brand-navy dark:text-blue-400"></i> Documentos do Cliente & Evidências Anexadas
+                    </h4>
+                    <div id="modalDocumentList" class="space-y-2.5"></div>
+                </div>
+
+                <div id="caseSection-todo" class="case-section space-y-4 hidden">
+                    <h4 class="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-list-check text-brand-red"></i> To-Do List Operacional da Equipe
+                    </h4>
+                    <div id="modalTodoList" class="space-y-2.5"></div>
+                </div>
+
+                <div id="caseSection-comments" class="case-section space-y-4 hidden">
+                    <h4 class="font-bold text-slate-800 dark:text-white text-xs uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-comments text-brand-accent"></i> Comentários & Notas da Equipe
+                    </h4>
+                    <div id="modalCommentsList" class="space-y-3 max-h-56 overflow-y-auto pr-1"></div>
+                    <div class="flex gap-3 pt-2">
+                        <input type="text" id="newCommentInput" placeholder="Digite um comentário ou atualização para a equipe..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-xs outline-none focus:border-brand-accent text-slate-800 dark:text-white">
+                        <button onclick="addComment()" class="px-6 py-3 bg-brand-navy text-white text-xs font-semibold rounded-xl hover:bg-brand-navyLight transition-all">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 bg-slate-50 dark:bg-brand-darkCard border-t border-slate-100 dark:border-brand-darkBorder flex justify-between items-center">
+                <span class="text-xs text-slate-400 font-medium">Responsável: Malu Peres</span>
+                <button onclick="closeCaseDetail()" class="px-6 py-2.5 bg-brand-navy text-white text-xs font-semibold rounded-xl hover:bg-brand-navyLight transition-all">Salvar e Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white dark:bg-brand-darkCard w-full max-w-xl p-6 rounded-3xl shadow-2xl border border-slate-100 dark:border-brand-darkBorder m-4 max-h-[90vh] overflow-y-auto text-slate-800 dark:text-slate-100">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-slate-800 dark:text-white text-base">Cadastrar Novo Processo</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleFormSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Nome Completo do Cliente (Titular)</label>
+                    <input type="text" id="inputClientName" required placeholder="Ex: Mariana Silva" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none text-slate-800 dark:text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Segmento</label>
+                        <select id="selectSegment" onchange="onSegmentChange()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none text-slate-800 dark:text-white">
+                            <option value="Imigração">Imigração</option>
+                            <option value="Vistos de Turista & Renovação">Vistos de Turista & Renovação</option>
+                            <option value="Serviços Consulares">Serviços Consulares</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Categoria Específica</label>
+                        <select id="selectCategory" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none text-slate-800 dark:text-white">
+                            <option value="RFE | Response">RFE | Response</option>
+                            <option value="Estudante">Estudante</option>
+                            <option value="Extensao">Extensão</option>
+                            <option value="Family Petition">Family Petition</option>
+                            <option value="Cidadania">Cidadania</option>
+                            <option value="EB-1">EB-1</option>
+                            <option value="EB-2">EB-2</option>
+                            <option value="EB-3">EB-3</option>
+                            <option value="EB2NIW">EB2NIW</option>
+                            <option value="Asylum">Asylum</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Campos dinâmicos extras para Imigração -->
+                <div id="immigrationExtraFields" class="space-y-3 p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Modalidade de Envio</label>
+                            <select id="inputModalidade" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none text-slate-800 dark:text-white">
+                                <option value="Online (Portal USCIS)">Online (Portal USCIS)</option>
+                                <option value="Impresso (Correios / FedEx)">Impresso (Correios / FedEx)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Receipt Number (USCIS)</label>
+                            <input type="text" id="inputReceipt" placeholder="Ex: SRC-26-901-44210" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none text-slate-800 dark:text-white">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Tipo de Caso (Pessoa/Família)</label>
+                            <select id="inputCaseTypeGroup" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none text-slate-800 dark:text-white">
+                                <option value="Pessoa Sozinha (Individual)">Pessoa Sozinha (Individual)</option>
+                                <option value="Família / Grupo">Família / Grupo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Prazo Limite / Vencimento</label>
+                            <input type="date" id="inputDeadline" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 outline-none text-slate-800 dark:text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-brand-darkBorder">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-brand-darkBorder text-slate-600 dark:text-slate-300 font-semibold">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-brand-navy text-white font-semibold shadow-md">Salvar Processo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-brand-navy text-white text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 transition-all duration-300 translate-y-20 opacity-0 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span id="toast-message">Operação realizada com sucesso!</span>
+    </div>
+
+    <script>
+        let currentActiveCaseKey = null;
+        let calendarYear = 2026;
+        let calendarMonth = 9;
+        let caseTypeStatusChartInstance = null;
+
+        function getAppleTag(categoryText) {
+            let cat = (categoryText || "").trim();
+            if (cat.includes('Turista')) return `<span class="apple-glass-yellow px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">Turista B1/B2</span>`;
+            if (cat.includes('RFE')) return `<span class="apple-glass-red px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">RFE | Response</span>`;
+            if (cat.includes('Estudante')) return `<span class="apple-glass-blue px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">Estudante</span>`;
+            if (cat.includes('Extensao')) return `<span class="apple-glass-yellow px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">Extensão</span>`;
+            if (cat.includes('Family')) return `<span class="apple-glass-indigo px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">Family Petition</span>`;
+            if (cat.includes('Cidadania')) return `<span class="apple-glass-blue px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">Cidadania</span>`;
+            if (cat.includes('EB-1')) return `<span class="apple-glass-pink px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">EB-1</span>`;
+            if (cat.includes('EB-2')) return `<span class="apple-glass-indigo px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">EB-2</span>`;
+            if (cat.includes('EB-3')) return `<span class="apple-glass-blue px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">EB-3</span>`;
+            if (cat.includes('EB2NIW')) return `<span class="apple-glass-yellow px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">EB2NIW</span>`;
+            if (cat.includes('Asylum')) return `<span class="apple-glass-red px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">Asylum</span>`;
+            return `<span class="apple-glass-indigo px-2.5 py-1 rounded-full text-[10px] font-bold shadow-xs">${cat}</span>`;
+        }
+
+        const casesDatabase = {
+            'tourist_misael': {
+                name: 'MISAEL OLIVEIRA SANTOS',
+                type: 'Vistos de Turista & Renovação',
+                category: 'Turista B1/B2',
+                headerGradient: 'from-amber-600 to-amber-800',
+                isTourist: true,
+                passport: 'GE999137',
+                recoveryCode: 'DS881920',
+                birthYear: '1956',
+                motherName: 'EULINA OLIVEIRA SANTOS',
+                documents: [
+                    {name: 'Cópia do CPF', status: 'Ok', url: 'https://app.pipefy.com/storage/v1/signed/uploads/3ded1fd0-ae9c-4f90-a15e-a280128dd91f/RGMISAEL.pdf?signature=yCD3dUfQ03ECEdMokPvw9%2F%2FeMtSqSzxQiobNWkplqgo%3D', icon: 'fa-file-pdf text-red-500'},
+                    {name: 'Cópia do RG', status: 'Ok', url: 'https://app.pipefy.com/storage/v1/signed/uploads/70f65b6e-bb22-4085-b547-cb44c30b87c1/RGMISAEL.pdf?signature=TsI9wqXeI5I3Ec%2Fv%2Bd0IhIhocCsoXcoq1eUUv4OFu7Y%3D', icon: 'fa-file-pdf text-red-500'},
+                    {name: 'Cópia do passaporte atual', status: 'Ok', url: 'https://app.pipefy.com/storage/v1/signed/uploads/f27e2ed1-8225-4bc6-a0e8-15f8775b07ec/PASSAPORTEMISAEL.pdf?signature=Zmqrvg%2FlcY8wMVKSPWdROWENNU%2FdrrXiZyRmsFHCe6A%3D', icon: 'fa-passport text-blue-500'}
+                ],
+                todo: [{task: 'Validar dados da DS-160', done: true}, {task: 'Gerar taxa MRV', done: false}],
+                comments: [{author: 'Malu Peres (Admin)', time: 'Ontem às 14:30', text: 'Documentos anexados corretamente.'}],
+                fullQuestionnaire: {
+                    serviceData: { "Tipo de serviço": "Primeiro Visto", "Entrevista consular": "São Paulo", "Biometria": "São Paulo", "Tipo de visto": "Turismo e Negócios B1/B2" },
+                    personalData: { "Nome completo": "MISAEL OLIVEIRA SANTOS", "Data de nascimento": "08/27/1956", "Já usou outros nomes?": "Não", "País de nascimento": "BRASIL", "Estado civil": "Casado(a)", "Nome do Cônjuge": "TANIA REGINA BENTO SANTOS", "Data de nascimento do Cônjuge": "12/11/1961", "Profissão do Cônjuge": "APOSENTADO", "Renda bruta mensal": "5,800.00", "Cidade de nascimento Cônjuge": "JEQUIE BA", "Data do casamento": "01/08/1983", "Passaporte": "GE999137", "Possui outra nacionalidade?": "Não", "CPF": "855.204.468-49", "RG": "140889450" },
+                    address: { "Endereço completo": "RUA. JOAO CHIODI 60 CONJ. RES. MARIO DEDINI", "Cidade/Estado": "PIRACICABA - SP", "CEP": "13412327" },
+                    travel: { "Cidades de destino": "FLORIDA", "Data de chegada": "12/01/2026", "Tempo de permanência": "1 MES", "Local da hospedagem": "Familiar / MIQUEIAS OLIVEIRA SANTOS", "Endereço hospedagem": "15817 Tollington alley, WINTER GARDEN/FL" },
+                    contacts: { "Telefone": "+1 910-746-2532", "Email": "maria.paesaj@gmail.com" },
+                    social: { "Facebook": "MISAEL OLIVEIRA SANTOS", "Instagram": "MISA_OLIV", "X (Twitter)": "NAO", "LinkedIn": "NAO", "YouTube": "NAO", "Pinterest": "NAO" },
+                    sponsor: { "Quem pagará sua viagem": "Eu mesmo(a)" },
+                    companions: { "Vai viajar acompanhado(a)": "Sim", "Acompanhantes": "TANIA REGINA BENTO SANTOS - ESPOSA" },
+                    history: { "Negativa de visto?": "Não", "Já teve visto emitido?": "Não", "Já visitou os EUA?": "Não", "Carteira de motorista EUA?": "Não", "Extraviado?": "Não", "Cancelado?": "Não", "Processo de imigração?": "Não" },
+                    parents: { "Pai": "JOAO SANTOS (Nascimento: 02/08/1922 - FALECIDO)", "Mãe": "EULINA OLIVEIRA SANTOS (Nascimento: 02/12/1935 - FALECIDA)" },
+                    relativesUsa: { "Parente direto nos EUA?": "Sim", "Detalhes": "MIQUEIAS OLIVEIRA SANTOS (FILHO - Não-imigrante), NETA - ANA CAROLINA, NETO - JOHN WESLEY, NORA - MARIA CLAUDIA" },
+                    work: { "Empresa": "APOSENTADO", "Início": "02/15/2011", "Cargo": "APOSENTADO", "Renda": "5,800.00", "Funções": "APOSENTADO" },
+                    retirement: { "Aposentado?": "Sim", "Data": "02/15/2011", "Menos de 5 anos?": "Sim" },
+                    education: { "Idiomas": "PORTUGUES", "Países visitados (5 anos)": "BRASIL" },
+                    passportReturn: { "Devolução": "Retirar no CASV/CED" }
+                }
+            },
+            'rfe_mariana': { 
+                name: 'Mariana Silva', 
+                type: 'Imigração', 
+                category: 'RFE | Response', 
+                headerGradient: 'from-brand-red to-rose-800', 
+                filing: 'Online (Portal USCIS)', 
+                receiptNumber: 'IOE-938-28190', 
+                deadline: '06 de Outubro, 2026', 
+                isTourist: false,
+                briefing: {
+                    caseType: 'Família / Grupo',
+                    age: '34 anos',
+                    birthDate: '14/05/1992',
+                    passport: 'BR8921092',
+                    stayExpiration: '12/12/2026',
+                    i94Number: '98273619201',
+                    dependents: 'Lucas Silva (Marido, 36 anos - Nasc: 10/02/1990), Sofia Silva (Filha, 5 anos - Nasc: 22/04/2021)'
+                },
+                documents: [{name: 'Certidão', status: 'Verificado'}], 
+                todo: [{task: 'Revisar tradução', done: true}], 
+                comments: [
+                    {author: 'Miqueias Oliveira (Especialista Imigração)', time: 'Hoje às 10:15', text: 'Recebemos a notificação de RFE do USCIS, solicitando provas complementares de renda.'},
+                    {author: 'Malu Peres (Admin)', time: 'Ontem às 16:20', text: 'Documentação de imposto de renda solicitada ao cliente.'}
+                ] 
+            }
+        };
+
+        let clientsList = [
+            { id: 'tourist_misael', name: 'MISAEL OLIVEIRA SANTOS', segment: 'Vistos de Turista & Renovação', category: 'Turista B1/B2', identifier: 'Passaporte: GE999137' },
+            { id: 'rfe_mariana', name: 'Mariana Silva', segment: 'Imigração', category: 'RFE | Response', identifier: 'Recibo: IOE-938-28190' }
+        ];
+
+        function onSegmentChange() {
+            const seg = document.getElementById('selectSegment').value;
+            const extra = document.getElementById('immigrationExtraFields');
+            const catSelect = document.getElementById('selectCategory');
+            if (seg === 'Imigração') {
+                extra.classList.remove('hidden');
+                catSelect.innerHTML = `
+                    <option value="RFE | Response">RFE | Response</option>
+                    <option value="Estudante">Estudante</option>
+                    <option value="Extensao">Extensão</option>
+                    <option value="Family Petition">Family Petition</option>
+                    <option value="Cidadania">Cidadania</option>
+                    <option value="EB-1">EB-1</option>
+                    <option value="EB-2">EB-2</option>
+                    <option value="EB-3">EB-3</option>
+                    <option value="EB2NIW">EB2NIW</option>
+                    <option value="Asylum">Asylum</option>
+                `;
+            } else if (seg === 'Vistos de Turista & Renovação') {
+                extra.classList.add('hidden');
+                catSelect.innerHTML = `<option value="Turista B1/B2">Turista B1/B2</option>`;
+            } else {
+                extra.classList.add('hidden');
+                catSelect.innerHTML = `<option value="Serviços Consulares">Serviços Consulares</option>`;
+            }
+        }
+
+        function openCaseTypeSubDashboard(caseTypeName) {
+            switchTab('casetype-subdashboard');
+            document.getElementById('caseTypeBadgeTitle').innerText = 'Categoria: ' + caseTypeName;
+            document.getElementById('caseTypeChartTitle').innerText = 'Status dos Casos - ' + caseTypeName;
+
+            let ongoing = Math.floor(5 + Math.random() * 15);
+            let completed = Math.floor(3 + Math.random() * 10);
+            let protocol = Math.floor(1 + Math.random() * 6);
+
+            document.getElementById('statCaseTypeOngoing').innerText = ongoing;
+            document.getElementById('statCaseTypeCompleted').innerText = completed;
+            document.getElementById('statCaseTypeProtocol').innerText = protocol;
+
+            const ctx = document.getElementById('caseTypeStatusChart').getContext('2d');
+            if (caseTypeStatusChartInstance) caseTypeStatusChartInstance.destroy();
+
+            caseTypeStatusChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Em Andamento', 'Concluídos', 'Para Protocolar'],
+                    datasets: [{
+                        label: 'Quantidade de Casos',
+                        data: [ongoing, completed, protocol],
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function runAITranslation() {
+            const translator = document.getElementById('translatorUserSelect').value;
+            const text = document.getElementById('sourceDocumentText').value;
+            if(!text.trim()) {
+                alert('Por favor, insira ou cole o texto do documento para tradução.');
+                return;
+            }
+            const output = `CERTIFIED TRANSLATION // TRADUÇÃO CERTIFICADA (USCIS COMPLIANT)
+--------------------------------------------------------------------------------
+Source Document Text (Original):
+"${text}"
+
+Translated Document Text (English):
+"[AI Translation of Document: Translated faithfully and accurately from Portuguese to English according to USCIS standards.]"
+
+--------------------------------------------------------------------------------
+CERTIFICATE OF ACCURACY
+
+I, ${translator}, hereby certify that I am fluent in the English and Portuguese languages, and that the above/attached document is an accurate translation of the document provided by the client.
+
+Translator Signature: __________________________________
+[Awaiting Adobe Sign Signature for ${translator}]
+Date: October 6, 2026
+Company: American Eagle Multi Services, LLC
+`;
+            document.getElementById('translationOutputBox').innerText = output;
+            showToast('Tradução gerada com assinatura de ' + translator + '!');
+        }
+
+        function copyTranslation() {
+            const text = document.getElementById('translationOutputBox').innerText;
+            navigator.clipboard.writeText(text);
+            showToast('Texto traduzido copiado para a área de transferência!');
+        }
+
+        function sendToAdobeSign() {
+            showToast('Documento enviado com sucesso para o Adobe Sign!');
+        }
+
+        function toggleDarkMode() {
+            const htmlEl = document.documentElement;
+            const iconEl = document.getElementById('darkModeIcon');
+            if (htmlEl.classList.contains('dark')) {
+                htmlEl.classList.remove('dark');
+                iconEl.className = "fa-solid fa-moon text-sm";
+                localStorage.setItem('aems_theme', 'light');
+            } else {
+                htmlEl.classList.add('dark');
+                iconEl.className = "fa-solid fa-sun text-sm text-amber-400";
+                localStorage.setItem('aems_theme', 'dark');
+            }
+        }
+
+        function renderClientsTable() {
+            let html = '';
+            clientsList.forEach(c => {
+                html += `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-brand-darkBorder/40 transition-colors">
+                        <td class="py-3.5 px-6 font-bold text-slate-900 dark:text-white">${c.name}</td>
+                        <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-indigo-50 dark:bg-blue-950/40 text-brand-navy dark:text-blue-300">${c.segment}</span></td>
+                        <td class="py-3.5 px-6 text-slate-700 dark:text-slate-300">${getAppleTag(c.category)}</td>
+                        <td class="py-3.5 px-6 font-mono font-bold text-slate-600 dark:text-slate-300">${c.identifier}</td>
+                        <td class="py-3.5 px-6 text-right"><button onclick="openCaseDetail('${c.id}')" class="px-3 py-1.5 bg-slate-100 dark:bg-brand-darkBorder hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-lg font-semibold">Ver Dossiê</button></td>
+                    </tr>
+                `;
+            });
+            document.getElementById('clientsTableBody').innerHTML = html;
+            document.getElementById('statTotalCases').innerText = clientsList.length + 140;
+        }
+
+        function renderFullCalendar() {
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('calendarMonthTitle').innerText = `${monthNames[calendarMonth]} ${calendarYear}`;
+            const gridEl = document.getElementById('calendarDaysGrid');
+            gridEl.innerHTML = '';
+            const firstDayIndex = new Date(calendarYear, calendarMonth, 1).getDay();
+            const totalDays = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                gridEl.innerHTML += `<div class="p-3 bg-white/5 rounded-xl opacity-30"></div>`;
+            }
+            for (let day = 1; day <= totalDays; day++) {
+                let badge = '';
+                if(calendarMonth === 9 && day === 6) {
+                    badge = `<div onclick="openCaseDetail('rfe_mariana')" class="mt-1 bg-red-600 text-white rounded text-[9px] p-0.5 font-bold cursor-pointer hover:bg-red-700">RFE Mariana</div>`;
+                }
+                gridEl.innerHTML += `<div class="p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-white min-h-[64px] flex flex-col justify-between"><span class="text-xs">${day}</span>${badge}</div>`;
+            }
+        }
+
+        function changeMonth(direction) {
+            calendarMonth += direction;
+            if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+            else if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+            renderFullCalendar();
+        }
+
+        function switchCaseTab(tabName) {
+            document.querySelectorAll('.case-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.case-tab-btn').forEach(btn => {
+                btn.classList.remove('border-brand-navy', 'text-brand-navy', 'dark:text-white', 'dark:border-blue-400');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById('caseSection-' + tabName).classList.remove('hidden');
+            const activeBtn = document.getElementById('caseTab-' + tabName);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-500');
+                activeBtn.classList.add('border-brand-navy', 'text-brand-navy', 'dark:text-white', 'dark:border-blue-400');
+            }
+        }
+
+        function openCaseDetail(key) {
+            currentActiveCaseKey = key;
+            const data = casesDatabase[key] || { 
+                name: 'Mariana Silva', 
+                type: 'Imigração', 
+                category: 'RFE | Response', 
+                isTourist: false, 
+                filing: 'Online (Portal USCIS)', 
+                receiptNumber: 'IOE-938-28190', 
+                deadline: '2026-10-06',
+                briefing: {
+                    caseType: 'Família / Grupo',
+                    age: '34 anos',
+                    birthDate: '14/05/1992',
+                    passport: 'BR8921092',
+                    stayExpiration: '12/12/2026',
+                    i94Number: '98273619201',
+                    dependents: 'Lucas Silva (Marido, 36 anos - Nasc: 10/02/1990), Sofia Silva (Filha, 5 anos - Nasc: 22/04/2021)'
+                },
+                comments: [
+                    {author: 'Miqueias Oliveira (Especialista Imigração)', time: 'Hoje às 10:15', text: 'Recebemos a notificação de RFE do USCIS.'},
+                    {author: 'Malu Peres (Admin)', time: 'Ontem às 16:20', text: 'Documentação solicitada.'}
+                ]
+            };
+
+            document.getElementById('modalClientName').innerText = data.name;
+            document.getElementById('modalCaseType').innerText = data.type;
+            document.getElementById('modalCategoryBadgeContainer').innerHTML = getAppleTag(data.category);
+
+            const generalContainer = document.getElementById('generalFieldsContainer');
+            const touristSummaryBox = document.getElementById('touristQuickSummaryBox');
+            const immigrationBriefingBox = document.getElementById('immigrationBriefingAndComments');
+
+            if (data.isTourist) {
+                touristSummaryBox.classList.remove('hidden');
+                immigrationBriefingBox.classList.add('hidden');
+                document.getElementById('qsPassport').innerText = data.passport || '-';
+                document.getElementById('qsRecoveryCode').innerText = data.recoveryCode || '-';
+                document.getElementById('qsBirthYear').innerText = data.birthYear || '-';
+                document.getElementById('qsMotherName').innerText = data.motherName || '-';
+
+                generalContainer.innerHTML = `
+                    <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-400 font-semibold uppercase text-[10px] block mb-1">Tipo de Processo</span>
+                        <p class="font-bold text-amber-600 text-sm">Visto de Turista (B1/B2)</p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-400 font-semibold uppercase text-[10px] block mb-1">Passaporte</span>
+                        <p class="font-mono font-bold text-slate-800 dark:text-white text-sm">${data.passport}</p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-400 font-semibold uppercase text-[10px] block mb-1">Código DS-160</span>
+                        <p class="font-mono font-bold text-emerald-600 text-sm">${data.recoveryCode}</p>
+                    </div>
+                `;
+
+                if(data.fullQuestionnaire) {
+                    let qHtml = '';
+                    for(let sectionKey in data.fullQuestionnaire) {
+                        let secData = data.fullQuestionnaire[sectionKey];
+                        qHtml += `<div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2">
+                            <h5 class="font-bold text-amber-700 dark:text-amber-400 uppercase text-[11px] mb-2 tracking-wider">${sectionKey.toUpperCase()}</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">`;
+                        for(let subKey in secData) {
+                            let val = secData[subKey];
+                            let isLink = typeof val === 'string' && val.startsWith('http');
+                            qHtml += `<div><span class="text-slate-400 block text-[10px]">${subKey}</span>`;
+                            if(isLink) {
+                                qHtml += `<a href="${val}" target="_blank" class="font-bold text-blue-600 underline truncate block">${val}</a>`;
+                            } else {
+                                qHtml += `<p class="font-bold text-slate-800 dark:text-white">${val || '-'}</p>`;
+                            }
+                            qHtml += `</div>`;
+                        }
+                        qHtml += `</div></div>`;
+                    }
+                    document.getElementById('fullQuestionnaireContent').innerHTML = qHtml;
+                }
+            } else {
+                touristSummaryBox.classList.add('hidden');
+                immigrationBriefingBox.classList.remove('hidden');
+
+                generalContainer.innerHTML = `
+                    <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 relative group">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-slate-400 font-semibold uppercase text-[10px]">Modalidade & Envio</span>
+                            <button onclick="editFieldModal('filing')" class="text-slate-400 hover:text-brand-navy dark:hover:text-white"><i class="fa-solid fa-pencil text-[10px]"></i></button>
+                        </div>
+                        <p id="dispFiling" class="font-bold text-slate-800 dark:text-white text-sm">${data.filing || 'Online (Portal USCIS)'}</p>
+                        <div id="editBoxFiling" class="hidden mt-2 space-y-2">
+                            <select id="inputEditFiling" class="w-full bg-white dark:bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-xs">
+                                <option value="Online (Portal USCIS)">Online (Portal USCIS)</option>
+                                <option value="Impresso (Correios / FedEx)">Impresso (Correios / FedEx)</option>
+                            </select>
+                            <button onclick="saveFieldModal('filing')" class="px-2.5 py-1 bg-brand-navy text-white rounded text-[10px] font-bold">Salvar</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 relative group">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-slate-400 font-semibold uppercase text-[10px]">Receipt Number (USCIS)</span>
+                            <button onclick="editFieldModal('receipt')" class="text-slate-400 hover:text-brand-navy dark:hover:text-white"><i class="fa-solid fa-pencil text-[10px]"></i></button>
+                        </div>
+                        <p id="dispReceipt" class="font-mono font-bold text-emerald-600 text-sm">${data.receiptNumber || 'SRC-26-000-00000'}</p>
+                        <div id="editBoxReceipt" class="hidden mt-2 space-y-2">
+                            <input type="text" id="inputEditReceipt" value="${data.receiptNumber || ''}" class="w-full bg-white dark:bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-xs font-mono">
+                            <button onclick="saveFieldModal('receipt')" class="px-2.5 py-1 bg-brand-navy text-white rounded text-[10px] font-bold">Salvar</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 relative group">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-slate-400 font-semibold uppercase text-[10px]">Prazo Limite</span>
+                            <button onclick="editFieldModal('deadline')" class="text-slate-400 hover:text-brand-navy dark:hover:text-white"><i class="fa-solid fa-pencil text-[10px]"></i></button>
+                        </div>
+                        <p id="dispDeadline" class="font-bold text-brand-red text-sm">${data.deadline || '2026-10-30'}</p>
+                        <div id="editBoxDeadline" class="hidden mt-2 space-y-2">
+                            <input type="date" id="inputEditDeadline" value="${data.deadline || ''}" class="w-full bg-white dark:bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-xs">
+                            <button onclick="saveFieldModal('deadline')" class="px-2.5 py-1 bg-brand-navy text-white rounded text-[10px] font-bold">Salvar</button>
+                        </div>
+                    </div>
+                `;
+
+                // Briefing data
+                const b = data.briefing || { caseType: 'Família / Grupo', age: '34 anos', birthDate: '14/05/1992', passport: 'BR8921092', stayExpiration: '12/12/2026', i94Number: '98273619201', dependents: 'Lucas Silva (Marido, 36 anos - Nasc: 10/02/1990), Sofia Silva (Filha, 5 anos - Nasc: 22/04/2021)' };
+                document.getElementById('immigrationBriefingContent').innerHTML = `
+                    <div><span class="text-slate-400 block text-[10px]">Tipo de Caso</span><p class="font-bold text-slate-800 dark:text-white">${b.caseType}</p></div>
+                    <div><span class="text-slate-400 block text-[10px]">Nome Completo</span><p class="font-bold text-slate-800 dark:text-white">${data.name}</p></div>
+                    <div><span class="text-slate-400 block text-[10px]">Idade / Data de Nasc.</span><p class="font-bold text-slate-800 dark:text-white">${b.age} (${b.birthDate})</p></div>
+                    <div><span class="text-slate-400 block text-[10px]">Passaporte</span><p class="font-mono font-bold text-slate-800 dark:text-white">${b.passport}</p></div>
+                    <div><span class="text-slate-400 block text-[10px]">Vencimento da Estadia nos EUA</span><p class="font-bold text-brand-red">${b.stayExpiration}</p></div>
+                    <div><span class="text-slate-400 block text-[10px]">Número do I-94</span><p class="font-mono font-bold text-brand-accent">${b.i94Number}</p></div>
+                    <div class="col-span-2"><span class="text-slate-400 block text-[10px]">Dependentes & Nomes</span><p class="font-bold text-slate-800 dark:text-white">${b.dependents}</p></div>
+                `;
+
+                // Render latest comments below dotted line
+                let commHtml = '';
+                (data.comments || []).forEach(cm => {
+                    commHtml += `<div class="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400">
+                            <span class="font-bold text-indigo-600 dark:text-indigo-400">${cm.author}</span>
+                            <span>${cm.time}</span>
+                        </div>
+                        <p class="text-xs text-slate-700 dark:text-slate-300">${cm.text}</p>
+                    </div>`;
+                });
+                document.getElementById('immigrationLatestComments').innerHTML = commHtml || '<p class="text-xs text-slate-400">Nenhum comentário registrado.</p>';
+            }
+
+            let docHtml = '';
+            (data.documents || []).forEach(d => {
+                docHtml += `<div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid ${d.icon || 'fa-file-pdf text-red-500'} text-lg"></i>
+                        <div>
+                            <span class="font-bold text-slate-800 dark:text-white text-xs block">${d.name}</span>
+                            ${d.url ? `<a href="${d.url}" target="_blank" class="text-[10px] text-blue-600 underline">Acessar Arquivo Original</a>` : ''}
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 text-[10px] font-bold rounded-full">${d.status}</span>
+                </div>`;
+            });
+            document.getElementById('modalDocumentList').innerHTML = docHtml || '<p class="text-slate-400">Nenhum documento anexado.</p>';
+
+            renderCommentsList(data);
+
+            switchCaseTab('general');
+            document.getElementById('caseDetailModal').classList.remove('hidden');
+        }
+
+        function editFieldModal(field) {
+            if(field === 'filing') {
+                document.getElementById('editBoxFiling').classList.toggle('hidden');
+            } else if(field === 'receipt') {
+                document.getElementById('editBoxReceipt').classList.toggle('hidden');
+            } else if(field === 'deadline') {
+                document.getElementById('editBoxDeadline').classList.toggle('hidden');
+            }
+        }
+
+        function saveFieldModal(field) {
+            const data = casesDatabase[currentActiveCaseKey];
+            if(!data) return;
+            if(field === 'filing') {
+                data.filing = document.getElementById('inputEditFiling').value;
+                document.getElementById('dispFiling').innerText = data.filing;
+                document.getElementById('editBoxFiling').classList.add('hidden');
+            } else if(field === 'receipt') {
+                data.receiptNumber = document.getElementById('inputEditReceipt').value;
+                document.getElementById('dispReceipt').innerText = data.receiptNumber;
+                document.getElementById('editBoxReceipt').classList.add('hidden');
+            } else if(field === 'deadline') {
+                data.deadline = document.getElementById('inputEditDeadline').value;
+                document.getElementById('dispDeadline').innerText = data.deadline;
+                document.getElementById('editBoxDeadline').classList.add('hidden');
+            }
+            showToast('Informação atualizada com sucesso!');
+        }
+
+        function editField(type) {
+            if(type === 'category') {
+                document.getElementById('editCategoryBox').classList.toggle('hidden');
+            }
+        }
+
+        function saveField(type) {
+            if(type === 'category') {
+                const newCat = document.getElementById('inputEditCategory').value;
+                casesDatabase[currentActiveCaseKey].category = newCat;
+                document.getElementById('modalCategoryBadgeContainer').innerHTML = getAppleTag(newCat);
+                document.getElementById('editCategoryBox').classList.add('hidden');
+                renderClientsTable();
+                showToast('Categoria atualizada com sucesso!');
+            }
+        }
+
+        function renderCommentsList(data) {
+            let html = '';
+            (data.comments || []).forEach(c => {
+                html += `<div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                    <div class="flex justify-between items-center text-[10px] text-slate-400">
+                        <span class="font-bold text-slate-700 dark:text-slate-300">${c.author}</span>
+                        <span>${c.time}</span>
+                    </div>
+                    <p class="text-xs text-slate-700 dark:text-slate-300">${c.text}</p>
+                </div>`;
+            });
+            document.getElementById('modalCommentsList').innerHTML = html || '<p class="text-xs text-slate-400">Nenhum comentário registrado ainda.</p>';
+        }
+
+        function addComment() {
+            const input = document.getElementById('newCommentInput');
+            const txt = input.value.trim();
+            if(!txt) return;
+            const data = casesDatabase[currentActiveCaseKey];
+            if(!data.comments) data.comments = [];
+            data.comments.unshift({ author: 'Malu Peres (Admin)', time: 'Agora mesmo', text: txt });
+            input.value = '';
+            renderCommentsList(data);
+            if(!data.isTourist) {
+                // update briefing comments
+                let commHtml = '';
+                data.comments.forEach(cm => {
+                    commHtml += `<div class="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400">
+                            <span class="font-bold text-indigo-600 dark:text-indigo-400">${cm.author}</span>
+                            <span>${cm.time}</span>
+                        </div>
+                        <p class="text-xs text-slate-700 dark:text-slate-300">${cm.text}</p>
+                    </div>`;
+                });
+                document.getElementById('immigrationLatestComments').innerHTML = commHtml;
+            }
+            showToast('Comentário adicionado com sucesso!');
+        }
+
+        function closeCaseDetail() {
+            document.getElementById('caseDetailModal').classList.add('hidden');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-navy', 'text-white', 'shadow-md');
+                btn.classList.add('text-slate-600', 'dark:text-slate-300');
+            });
+            let navTarget = tabId;
+            if (tabId === 'immigration-calendar' || tabId === 'immigration-kanban' || tabId === 'casetype-subdashboard') navTarget = 'immigration';
+            const activeBtn = document.getElementById('nav-' + navTarget);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+                activeBtn.classList.add('bg-brand-navy', 'text-white', 'shadow-md');
+            }
+            if (tabId === 'clients') renderClientsTable();
+            if (tabId === 'immigration-calendar') renderFullCalendar();
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('-translate-x-full'); }
+        function openModal() { document.getElementById('modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('inputClientName').value;
+            const segment = document.getElementById('selectSegment').value;
+            const category = document.getElementById('selectCategory').value;
+            const filing = document.getElementById('inputModalidade').value;
+            const receipt = document.getElementById('inputReceipt').value || 'SRC-26-901-' + Math.floor(10000 + Math.random() * 90000);
+            const deadline = document.getElementById('inputDeadline').value || '2026-11-15';
+            const caseTypeGroup = document.getElementById('inputCaseTypeGroup').value;
+
+            const newId = 'case_' + Date.now();
+            
+            casesDatabase[newId] = {
+                name: name,
+                type: segment,
+                category: category,
+                isTourist: segment.includes('Turista'),
+                filing: filing,
+                receiptNumber: receipt,
+                deadline: deadline,
+                briefing: {
+                    caseType: caseTypeGroup,
+                    age: '30 anos',
+                    birthDate: '01/01/1996',
+                    passport: 'BR' + Math.floor(100000 + Math.random() * 900000),
+                    stayExpiration: '12/30/2026',
+                    i94Number: '99887766554',
+                    dependents: caseTypeGroup.includes('Família') ? 'Cônjuge e Filho(s) vinculados (Nasc: 15/06/1995)' : 'Nenhum'
+                },
+                documents: [{name: 'Documento Principal', status: 'Verificado', icon: 'fa-file-pdf text-red-500'}],
+                comments: [{author: 'Malu Peres (Admin)', time: 'Agora mesmo', text: 'Processo imigratório cadastrado no sistema.'}]
+            };
+
+            clientsList.push({ 
+                id: newId, 
+                name: name, 
+                segment: segment, 
+                category: category, 
+                identifier: segment.includes('Turista') ? 'Passaporte: BR123456' : 'Recibo: ' + receipt 
+            });
+
+            closeModal();
+            renderClientsTable();
+            showToast('Processo cadastrado e salvo com sucesso na aba de Clientes!');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        window.onload = function() {
+            renderClientsTable();
+            renderFullCalendar();
+            if (localStorage.getItem('aems_theme') === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('darkModeIcon').className = "fa-solid fa-sun text-sm text-amber-400";
+            }
+        }
+    </script>
+</body>
+</html>
